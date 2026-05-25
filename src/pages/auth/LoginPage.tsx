@@ -1,9 +1,12 @@
-import React from "react";
 import { FaFacebook } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc'
 import { RiKakaoTalkFill } from 'react-icons/ri';
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
+
+    const navigate = useNavigate();
+
     return(
         <div className="min-h-screen flex items-center justify-end pr-24">
             <div className="flex flex-col gap-[12px] w-[480px] h-[796px] rounded-[20px] backdrop-blur-[53px] shadow-[-8px_4px_5px_0px_rgba(0,0,0,0.24)] bg-white/10 border border-white/20 px-10 pt-24 pb-10">
@@ -23,7 +26,7 @@ function LoginPage() {
                     <span className="text-white text-sm">Remember me</span>
                 </div>
                 <div className="flex flex-col">
-                    <input type="submit" value="login" className="w-[400px] rounded-[12px] px-4 py-3 text-white font-medium text-xl bg-[linear-gradient(119deg,#4C75DF_10%,#8740CD_53%,#580075_92%)] cursor-pointer" />
+                    <input type="submit" value="login" onClick={()=>{navigate('/dashboard')}} className="w-[400px] rounded-[12px] px-4 py-3 text-white font-medium text-xl bg-[linear-gradient(119deg,#4C75DF_10%,#8740CD_53%,#580075_92%)] cursor-pointer" />
                     <div className="flex my-3 justify-center"><span className="text-white text-sm">비밀번호를 잊어버렸나요?</span></div>
                 </div>
                 <div className="flex items-center gap-5">
