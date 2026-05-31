@@ -5,7 +5,7 @@ const menus = ["Dashboard", "가족구성원", "인사평가", "요청", "일정
 
 function Side() {
     return(
-        <aside className="w-[248px] self-start bg-white rounded-2xl border border-gray-200 shadow-sm flex flex-col py-4">
+        <aside className="w-[188px] self-start bg-white rounded-2xl border border-gray-200 shadow-sm flex flex-col py-4">
             {/* 메뉴 접기 버튼 */}
             <div className="flex items-center gap-2 px-5 pb-4 mb-2 border-b border-gray-100">
                 <button className="flex items-center gap-2 text-gray-400 hover:text-[#384295] transition-colors cursor-pointer">

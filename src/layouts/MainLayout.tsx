@@ -1,7 +1,10 @@
 import { Outlet } from "react-router-dom";
-import Header from "../component/Header.tsx"
-import Side from "../component/Side.tsx"
+import Header from "../component/Header"
+import Side from "../component/Side"
 import { useState } from "react";
+import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 function MainLayout () {
 
