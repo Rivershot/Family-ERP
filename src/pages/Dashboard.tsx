@@ -5,6 +5,7 @@ import { MdSavings, MdPayments, MdApproval, MdEvent, MdChecklist, MdFamilyRestro
 import { AgGridReact } from "ag-grid-react";
 import type { ColDef } from "ag-grid-community";
 import { themeQuartz } from "ag-grid-community"; 
+import type { ICellRendererParams } from "ag-grid-community";
 
 type Approval = { num: string; docName: string, type: string};
 type Family = { num: string; img: string; name: string, relation: string };
@@ -25,10 +26,10 @@ function DashBoard() {
     // 가족구성원 Grid
     const faCol: ColDef<Family>[] = [
         { field: "num", headerName: "#", flex: 0.5 },
-        { field: "name", headerName: "Name", cellRenderer: (p) => (
+        { field: "name", headerName: "Name", cellRenderer: (p: ICellRendererParams<Family>) => (
             <div className="flex items-center gap-2 h-full">
-                <img src={p.data.img} className="w-8 h-8 rounded-full"></img>
-                <span>{p.data.name}</span>
+                <img src={p.data?.img} className="w-8 h-8 rounded-full"></img>
+                <span>{p.data?.name}</span>
             </div>
         ) },
         { field: "relation", headerName: "Relation" },
