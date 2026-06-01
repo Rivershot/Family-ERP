@@ -1,23 +1,52 @@
 import BudgetChart from "./chart/BudgetChart" 
+import ExpenseChart from "./chart/ExpenseChart"
+import PieChart from "./chart/PieChart";
 import { MdSavings, MdPayments, MdApproval, MdEvent, MdChecklist, MdFamilyRestroom } from "react-icons/md";
 import { AgGridReact } from "ag-grid-react";
 import type { ColDef } from "ag-grid-community";
-import { themeQuartz } from "ag-grid-community";
+import { themeQuartz } from "ag-grid-community"; 
 
 type Approval = { num: string; docName: string, type: string};
+type Family = { num: string; img: string; name: string, relation: string };
 
 function DashBoard() {
     const defaultData = [100,200,150,200,300,200,300,340];
     const col: ColDef<Approval>[] = [
-        { field : "num", headerName : "#번호", flex: 0.5},
+        { field : "num", headerName : "#번호", flex: 0.5}, 
         { field : "docName", headerName : "기안명" },
         { field : "type", headerName : "구분" },
     ];
     let rowData = [
-        { num: "01", docName: "여름휴가 계획", type: "결재요청"},
+        { num: "01", docName: "여름휴가 계획", type: "결재요청"}, 
         { num: "02", docName: "용돈 인상 요청", type: "결재요청"},
         { num: "03", docName: "집안일 제분담", type: "협조자"}
     ]
+
+    // 가족구성원 Grid
+    const faCol: ColDef<Family>[] = [
+        { field: "num", headerName: "#", flex: 0.5 },
+        { field: "name", headerName: "Name", cellRenderer: (p) => (
+            <div className="flex items-center gap-2 h-full">
+                <img src={p.data.img} className="w-8 h-8 rounded-full"></img>
+                <span>{p.data.name}</span>
+            </div>
+        ) },
+        { field: "relation", headerName: "Relation" },
+    ];
+    let faRowData = [
+        { num: "01", img: "/avatars/avatar1.svg", name: "Earl Grines", relation: "GrandFather"},
+        { num: "02", img: "/avatars/avatar2.svg", name: "James Tyler", relation: "Dad"},
+        { num: "03", img: "/avatars/avatar3.svg", name: "Tom Anderson", relation: "Ancle"},
+        { num: "04", img: "/avatars/avatar4.svg", name: "Gobby", relation: "Mom"},
+    ];
+
+    // ExpenseData
+    // Axios를 통해 통신으로 들어올 자리.
+    let expenseData: number[] = [];
+
+    // PieChart
+    let pieData: number[] = [];
+    let pieName: string[] = [];
 
     // Grid Theme
     const gridTheme = themeQuartz.withParams({
@@ -96,16 +125,17 @@ function DashBoard() {
                     </div>
                 </div>
                <div id="cd5" className="flex flex-col border border-violet-300 rounded-lg">
-                    <div id="cd5_tit" className="px-4 my-1 h-20 flex items-center">
+                    <div id="cd5_tit" className="pt-4 h-15 flex items-center">
                         <div className="flex flex-col px-5">
                             <span className="text-[#5A6478] text-xl font-semibold">2026년 가계 지출 현황</span>
                         </div>
                     </div>
-                    <div id="cd5_content" className="">
+                    <div id="cd5_content" className="h-[260px]">
+                        <ExpenseChart data={expenseData}></ExpenseChart>
                     </div>
                 </div>
                 <div id="cd6" className="flex flex-col border border-violet-300 rounded-lg">
-                    <div id="cd6_tit" className="px-4 my-1 h-20 flex items-center">
+                    <div id="cd6_tit" className="px-4 my-1 h-18 flex items-center">
                         <div className="w-[62px] h-[62px] rounded-full flex items-center justify-center bg-[#14B8A6]/5">
                             <MdChecklist size={35} className="text-[#14B8A6]"></MdChecklist>
                         </div>
@@ -114,11 +144,11 @@ function DashBoard() {
                         </div>
                     </div>
                     <div id="cd6_content" className="">
-                        
+                        <PieChart data={pieData} name={pieName}></PieChart>
                     </div>
                 </div>
                 <div id="cd7" className="flex flex-col border border-violet-300 rounded-lg">
-                    <div id="cd7_tit" className="px-4 my-1 h-20 flex items-center">
+                    <div id="cd7_tit" className="px-4 my-1 h-18 flex items-center">
                         <div className="w-[62px] h-[62px] rounded-full flex items-center justify-center bg-[#EC4899]/5">
                             <MdFamilyRestroom size={35} className="text-[#EC4899]"></MdFamilyRestroom>
                         </div>
@@ -126,8 +156,8 @@ function DashBoard() {
                             <span className="text-[#5A6478] text-base font-semibold text-xl">가족구성원 정보</span>
                         </div>
                     </div>
-                    <div id="cd7_content" className="" style={{height: 200, width: "100%"}}>
-                        <AgGridReact theme={gridTheme} defaultColDef={{flex:1, resizable:false, headerClass: "ag-header-center",cellStyle:{ textAlign: "center"}}} columnDefs={col} rowData={rowData}></AgGridReact>
+                    <div id="cd7_content" className="" style={{height: 240, width: "100%"}}>
+                        <AgGridReact theme={gridTheme} defaultColDef={{flex:1, resizable:false, headerClass: "ag-header-center",cellStyle:{ textAlign: "center"}}} columnDefs={faCol} rowData={faRowData}></AgGridReact>
                     </div>
                 </div>
             </div>
