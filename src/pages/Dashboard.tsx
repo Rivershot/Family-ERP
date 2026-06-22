@@ -1,7 +1,7 @@
 import BudgetChart from "./chart/BudgetChart" 
 import ExpenseChart from "./chart/ExpenseChart"
 import PieChart from "./chart/PieChart";
-import { MdSavings, MdPayments, MdApproval, MdEvent, MdChecklist, MdFamilyRestroom } from "react-icons/md";
+import { MdSavings, MdPayments, MdApproval, MdEvent, MdChecklist, MdFamilyRestroom, MdVideocam } from "react-icons/md";
 import { AgGridReact } from "ag-grid-react";
 import type { ColDef } from "ag-grid-community";
 import { themeQuartz } from "ag-grid-community"; 
@@ -9,6 +9,8 @@ import type { ICellRendererParams } from "ag-grid-community";
 
 type Approval = { num: string; docName: string, type: string};
 type Family = { num: string; img: string; name: string, relation: string };
+type Schedule = { id: number; startTime: string; endTime: string, date: string, 
+                content: string, category: string, link: string};
 
 function DashBoard() {
     const defaultData = [100,200,150,200,300,200,300,340];
@@ -41,6 +43,26 @@ function DashBoard() {
         { num: "04", img: "/avatars/avatar4.svg", name: "Gobby", relation: "Mom"},
     ];
 
+    // 일정 Data
+    let schedule: Schedule[] = [ 
+      { id: 1, startTime: "0830", endTime: "0900", date: "20260622", content: "가족 주간회의",   category: "meeting",     link: "https://zoom.us/j/123" },
+      { id: 2, startTime: "1000", endTime: "1800", date: "20260622", content: "재택근무",        category: "work",        link: "" },
+      { id: 3, startTime: "1930", endTime: "2000", date: "20260622", content: "장보기",          category: "task",        link: "" },
+      { id: 4, startTime: "1400", endTime: "1430", date: "20260623", content: "채원이 치과 예약", category: "appointment", link: "" },
+      { id: 5, startTime: "1100", endTime: "1200", date: "20260625", content: "미용실 예약",      category: "appointment", link: "" },
+      { id: 6, startTime: "1500", endTime: "1530", date: "20260626", content: "학부모 상담",      category: "meeting",     link: "https://meet.google.com/abc" },
+      { id: 7, startTime: "0900", endTime: "0930", date: "20260630", content: "공과금 납부",      category: "task",        link: "" },
+    ];
+
+    // 일정 Axios 
+
+    // 일정 Grouping
+    const group = schedule.reduce<Record<string, Schedule[]>>((acc, item) => {
+        acc[item.date] ??=[]
+        acc[item.date].push(item);
+        return acc
+    },{})
+
     // ExpenseData
     // Axios를 통해 통신으로 들어올 자리.
     let expenseData: number[] = [];
@@ -60,12 +82,37 @@ function DashBoard() {
         
     })
 
+    function dateLabel(param:string) {
+        const year = param.slice(0,4);
+        const month = param.slice(4,6);
+        const day = param.slice(6,8);
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const target = new Date(+year, +month - 1, +day);
+        const diff = (+target - +today) / 86400000;
+
+        return ({0: "Today", 1: "내일"} as Record<number, string>)[diff] ?? `${target.getMonth()+1}월 ${target.getDate()}일`;
+    }
+
+    // "0830" → "08:30"
+    const fmtTime = (t: string) => `${t.slice(0,2)}:${t.slice(2,4)}`;
+
+    // 카테고리 → 색점 색 (Figma palette)
+    const categoryColor: Record<string, string> = {
+        meeting: "#3B82F6",      // blue/500
+        appointment: "#EC4899",  // pink/500
+        task: "#FBBF24",         // amber/400
+        work: "#22C55E",         // green/500
+    };
+
     return (
-        <div>
-            <div className="border-b border-gray-300 py-2">
+        <div className="h-full flex flex-col">
+            <div className="border-b border-gray-300 py-2 shrink-0">
                 <h1 className="text-3xl">DashBoard</h1>
             </div>
-            <div className="grid grid-cols-4 grid-rows-2 gap-5 py-4">
+            <div className="grid grid-cols-4 grid-rows-2 gap-5 py-4 flex-1 min-h-0">
                 <div id="cd1" className="flex flex-col border border-violet-300 rounded-lg">
                     <div id="cd1_tit" className="px-4 my-1 h-20 flex items-center">
                         <div className="w-[62px] h-[62px] rounded-full flex items-center justify-center bg-[#4368FA]/5">
@@ -115,14 +162,52 @@ function DashBoard() {
                 </div>
                 <div id="cd4" className="row-span-2 flex flex-col border border-violet-300 rounded-lg">
                     <div id="cd4_tit" className="px-4 my-1 h-20 flex items-center">
-                        <div className="">
+                        <div className="w-[62px] h-[62px] rounded-full flex items-center justify-center bg-[#F59E0B]/5">
                             <MdEvent size={35} className="text-[#F59E0B]"></MdEvent>
                         </div>
                         <div className="flex flex-col px-5">
                             <span className="text-[#5A6478] text-base font-semibold text-xl">2026년 6월 일정</span>
                         </div>
                     </div>
-                    <div id="cd4_content" className="">
+                    <div id="cd4_content" className="flex-1 overflow-y-auto px-4 pb-4 flex flex-col gap-6">
+                    {
+                        Object.entries(group).map(([date, items])=>{
+                            const isToday = dateLabel(date) === "Today";
+                            return (
+                            <div className="flex flex-col gap-2" key={date}>
+                                <div className={`text-[13px] font-bold leading-5 ${isToday ? "text-blue-500" : "text-gray-700"}`}>{dateLabel(date)}</div>
+                                <ul className="flex flex-col gap-2">
+                                    {
+                                        items.map((item) => (
+                                            <li className="flex flex-col" key={item.id}>
+                                                {/* Meta: 색점 + 시간 + (링크 있으면) 화상 배지 */}
+                                                <div className="flex items-center gap-2 h-4">
+                                                    <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: categoryColor[item.category] ?? "#A1A1AA" }} />
+                                                    <span className="flex items-center gap-1 text-[11px] font-semibold text-[#A1A1AA]">
+                                                        <span>{fmtTime(item.startTime)}</span>
+                                                        <span>–</span>
+                                                        <span>{fmtTime(item.endTime)}</span>
+                                                    </span>
+                                                    {item.link && (
+                                                        <span className="w-3 h-3 rounded-full bg-[#A1A1AA] flex items-center justify-center">
+                                                            <MdVideocam size={8} className="text-white" />
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                {/* Title */}
+                                                <div className="pl-5 text-xs font-medium text-[#0C0C0D]">{item.content}</div>
+                                                {/* URL (링크 있을 때만) */}
+                                                {item.link && (
+                                                    <a href={item.link} className="pl-5 text-[11px] text-[#A1A1AA] truncate hover:underline">{item.link}</a>
+                                                )}
+                                            </li>
+                                        ))
+                                    }
+                                </ul>
+                            </div>
+                            );
+                        })
+                    }
                     </div>
                 </div>
                <div id="cd5" className="flex flex-col border border-violet-300 rounded-lg">
@@ -144,7 +229,7 @@ function DashBoard() {
                             <span className="text-[#5A6478] text-xl font-semibold">Plan</span>
                         </div>
                     </div>
-                    <div id="cd6_content" className="">
+                    <div id="cd6_content" className="flex-1 min-h-0">
                         <PieChart data={pieData} name={pieName}></PieChart>
                     </div>
                 </div>

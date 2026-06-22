@@ -38,7 +38,7 @@ function PieChart({data, name}: PieProp) {
     };
 
     return(
-        <EChartsReact option={options} style={{height: 260}}></EChartsReact>
+        <EChartsReact option={options} style={{height: "100%"}}></EChartsReact>
     )
 }
 
