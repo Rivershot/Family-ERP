@@ -1,0 +1,9 @@
+[ 
+    { "id": 1, "startTime": "0830", "endTime": "0900", "date": "20260622", "content": "가족 주간회의",   "category": "meeting",     "link": "https://zoom.us/j/123" },
+    { "id": 2, "startTime": "1000", "endTime": "1800", "date": "20260622", "content": "재택근무",      "category": "work",        "link": "" },
+    { "id": 3, "startTime": "1930", "endTime": "2000", "date": "20260622", "content": "장보기",       "category": "task",        "link": "" },
+    { "id": 4, "startTime": "1400", "endTime": "1430", "date": "20260623", "content": "채원이 치과 예약", "category": "appointment", "link": "" },
+    { "id": 5, "startTime": "1100", "endTime": "1200", "date": "20260625", "content": "미용실 예약",    "category": "appointment", "link": "" },
+    { "id": 6, "startTime": "1500", "endTime": "1530", "date": "20260626", "content": "학부모 상담",    "category": "meeting",     "link": "https://meet.google.com/abc" },
+    { "id": 7, "startTime": "0900", "endTime": "0930", "date": "20260630", "content": "공과금 납부",    "category": "task",        "link": "" }
+]

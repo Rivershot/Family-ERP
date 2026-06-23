@@ -6,12 +6,14 @@ import { AgGridReact } from "ag-grid-react";
 import type { ColDef } from "ag-grid-community";
 import { themeQuartz } from "ag-grid-community"; 
 import type { ICellRendererParams } from "ag-grid-community";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 type Approval = { num: string; docName: string, type: string};
 type Family = { num: string; img: string; name: string, relation: string };
 type Schedule = { id: number; startTime: string; endTime: string, date: string, 
                 content: string, category: string, link: string};
-
+                
 function DashBoard() {
     const defaultData = [100,200,150,200,300,200,300,340];
     const col: ColDef<Approval>[] = [
@@ -43,18 +45,11 @@ function DashBoard() {
         { num: "04", img: "/avatars/avatar4.svg", name: "Gobby", relation: "Mom"},
     ];
 
-    // 일정 Data
-    let schedule: Schedule[] = [ 
-      { id: 1, startTime: "0830", endTime: "0900", date: "20260622", content: "가족 주간회의",   category: "meeting",     link: "https://zoom.us/j/123" },
-      { id: 2, startTime: "1000", endTime: "1800", date: "20260622", content: "재택근무",        category: "work",        link: "" },
-      { id: 3, startTime: "1930", endTime: "2000", date: "20260622", content: "장보기",          category: "task",        link: "" },
-      { id: 4, startTime: "1400", endTime: "1430", date: "20260623", content: "채원이 치과 예약", category: "appointment", link: "" },
-      { id: 5, startTime: "1100", endTime: "1200", date: "20260625", content: "미용실 예약",      category: "appointment", link: "" },
-      { id: 6, startTime: "1500", endTime: "1530", date: "20260626", content: "학부모 상담",      category: "meeting",     link: "https://meet.google.com/abc" },
-      { id: 7, startTime: "0900", endTime: "0930", date: "20260630", content: "공과금 납부",      category: "task",        link: "" },
-    ];
-
-    // 일정 Axios 
+    // 일정 Axios, useEffect 빈 배열로 최초 1회만 실행한다. 
+    const [schedule, setSchedule] = useState<Schedule[]>([]);
+    useEffect(()=>{
+        axios.get("/mock/schedule.json").then((res) => setSchedule(res.data))
+    },[])
 
     // 일정 Grouping
     const group = schedule.reduce<Record<string, Schedule[]>>((acc, item) => {
@@ -63,13 +58,23 @@ function DashBoard() {
         return acc
     },{})
 
-    // ExpenseData
-    // Axios를 통해 통신으로 들어올 자리.
-    let expenseData: number[] = [];
+    // expense
+    const [expense, setExpense] = useState<number[]>([]);
+    useEffect(()=>{
+        axios.get("/mock/expense.json").then((res) => setExpense(res.data));
+    }, [])
 
     // PieChart
-    let pieData: number[] = [];
-    let pieName: string[] = [];
+    const [pieData, setPieData] = useState<number[]>([]);
+    const [pieName, setPieName] = useState<string[]>([]);
+    useEffect(()=>{
+        axios.get<Record<string, number>[]>("/mock/pieData.json").then((res) => {
+            const pieData = res.data.map((val) => Object.values(val)[0]);
+            const nameData: string[] = res.data.map((val) => Object.keys(val)[0]);
+            setPieData(pieData);
+            setPieName(nameData);
+        });
+    },[]) 
 
     // Grid Theme
     const gridTheme = themeQuartz.withParams({
@@ -217,7 +222,7 @@ function DashBoard() {
                         </div>
                     </div>
                     <div id="cd5_content" className="h-[260px]">
-                        <ExpenseChart data={expenseData}></ExpenseChart>
+                        <ExpenseChart data={expense}></ExpenseChart>
                     </div>
                 </div>
                 <div id="cd6" className="flex flex-col border border-violet-300 rounded-lg">
@@ -230,7 +235,7 @@ function DashBoard() {
                         </div>
                     </div>
                     <div id="cd6_content" className="flex-1 min-h-0">
-                        <PieChart data={pieData} name={pieName}></PieChart>
+                        <PieChart data={pieData} column={pieName}></PieChart>
                     </div>
                 </div>
                 <div id="cd7" className="flex flex-col border border-violet-300 rounded-lg">
