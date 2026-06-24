@@ -131,7 +131,7 @@ function DashBoard() {
                             <span className="text-[#16A34A] text-sm font-bold">+ ₩500,000</span>
                         </div>
                     </div>
-                    <div id="cd1_content" className="">
+                    <div id="cd1_content">
                         <BudgetChart data={defaultData} kind={"budget"}></BudgetChart>
                     </div>
                 </div>
@@ -148,7 +148,7 @@ function DashBoard() {
                             <span className="text-[#EF4444] text-sm font-bold">- ₩500,000</span>
                         </div>
                     </div>
-                    <div id="cd2_content" className="">
+                    <div id="cd2_content">
                         <BudgetChart data={defaultData} kind={"expense"}></BudgetChart>
                     </div>
                 </div>
@@ -161,7 +161,7 @@ function DashBoard() {
                             <span className="text-[#5A6478] text-base font-semibold text-xl">전자결재</span>
                         </div>
                     </div>
-                    <div id="cd3_content" className="" style={{height: 200, width: "100%"}}>
+                    <div id="cd3_content" className="flex-1 min-h-0">
                         <AgGridReact theme={gridTheme} defaultColDef={{flex:1, resizable:false, headerClass: "ag-header-center",cellStyle:{ textAlign: "center"}}} columnDefs={col} rowData={rowData}></AgGridReact>
                     </div>
                 </div>
@@ -174,7 +174,7 @@ function DashBoard() {
                             <span className="text-[#5A6478] text-base font-semibold text-xl">2026년 6월 일정</span>
                         </div>
                     </div>
-                    <div id="cd4_content" className="flex-1 overflow-y-auto px-4 pb-4 flex flex-col gap-6">
+                    <div id="cd4_content" className="flex-1 overflow-y-auto px-8 pb-4 flex flex-col gap-6">
                     {
                         Object.entries(group).map(([date, items])=>{
                             const isToday = dateLabel(date) === "Today";
@@ -221,7 +221,7 @@ function DashBoard() {
                             <span className="text-[#5A6478] text-xl font-semibold">2026년 가계 지출 현황</span>
                         </div>
                     </div>
-                    <div id="cd5_content" className="h-[260px]">
+                    <div id="cd5_content" className="flex-1 min-h-0">
                         <ExpenseChart data={expense}></ExpenseChart>
                     </div>
                 </div>
@@ -247,7 +247,7 @@ function DashBoard() {
                             <span className="text-[#5A6478] text-base font-semibold text-xl">가족구성원 정보</span>
                         </div>
                     </div>
-                    <div id="cd7_content" className="" style={{height: 240, width: "100%"}}>
+                    <div id="cd7_content" className="flex-1 min-h-0">
                         <AgGridReact theme={gridTheme} defaultColDef={{flex:1, resizable:false, headerClass: "ag-header-center",cellStyle:{ textAlign: "center"}}} columnDefs={faCol} rowData={faRowData}></AgGridReact>
                     </div>
                 </div>
