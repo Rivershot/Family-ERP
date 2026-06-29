@@ -1,0 +1,16 @@
+{
+  // === 학습용: 코드 자동추천 제어 (이 워크스페이스에만 적용) ===
+
+  // AI 줄단위 추천(회색 ghost text) 끄기
+  "editor.inlineSuggest.enabled": false,
+
+  // GitHub Copilot 자동완성 끄기 (설치돼 있을 경우)
+  "github.copilot.enable": {
+    "*": false
+  }
+
+  // 더 빡세게 맨손 연습하려면 위 } 앞에 콤마 찍고 아래 주석 해제:
+  // ,"editor.quickSuggestions": { "other": false, "comments": false, "strings": false }
+  // ,"editor.suggestOnTriggerCharacters": false
+  // ,"editor.acceptSuggestionOnEnter": "off"
+}

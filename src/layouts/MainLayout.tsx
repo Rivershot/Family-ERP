@@ -5,18 +5,26 @@ import { useState } from "react";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
+type Menu = {id: string, label: string};
 
 function MainLayout () {
 
     // 기본 탭은 1개 dashboard
-    const tab = [{ id:"dashboard", label:"DashBoard"}];
+    const [tab, setTab] = useState([{ id:"dashboard", label:"DashBoard"}]);
     const [activeTab, setActiveTab] = useState("dashboard");
+
+    // openTab
+    const openTab = (menu: Menu) => {
+        const isOpen = tab.some((t) => t.id === menu.id);
+        if (!isOpen) setTab([...tab, { id: menu.id, label: menu.label }]);
+        setActiveTab(menu.id);
+    }
 
     return (
         <div className="flex flex-col h-screen">
             {<Header/>}
             <div className="flex flex-1 gap-5 overflow-hidden bg-[#F7F9FB] p-5">
-                {<Side/>}
+                {<Side onMenuClick={openTab}/>}
                 <main className="flex flex-1 flex-col gap-4 overflow-hidden">
                     {/* 탭 바 (pill) — 동적 탭 목록은 여기에 React 상태로 렌더링 */}
                     <div className="flex h-[50px] w-fit min-w-[100px] items-center gap-1 rounded-full border border-gray-100 bg-white px-5 shadow-sm">
