@@ -2,12 +2,12 @@
 import { MdMenuOpen } from "react-icons/md";
 
 const menus = [
-    {id: "dashboard", label: "DashBoard"}, {id: "family", label: "가족구성원"},
-    {id: "evaluation", label: "인사평가"}, {id: "request", label: "요청"},
-    {id: "schedule", label: "일정"}, {id: "ledger", label: "가계부"}
+    {id: "dashboard", label: "DashBoard", url: "/dashboard"}, {id: "family", label: "가족구성원", url: "/family"},
+    {id: "evaluation", label: "인사평가", url: "/evaluation"}, {id: "request", label: "요청", url: "/request"},
+    {id: "schedule", label: "일정", url: "/schedule"}, {id: "ledge", label: "가계부", url: "/ledge"}
 ];
 
-type Menu = {id: string, label: string};
+type Menu = {id: string, label: string, url: string};
 function Side({onMenuClick}: {onMenuClick: (menu: Menu) => void}) {
 
     // Event handler for menu click

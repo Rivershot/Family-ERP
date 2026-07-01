@@ -5,6 +5,7 @@ import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage"
 import AuthLayout from "./layouts/AuthLayout"
 import MainLayout from "./layouts/MainLayout"
 import DashBoard from "./pages/Dashboard"
+import Ledge  from "./pages/Ledge"
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path="/" element={<Navigate to="/login" replace/>}/>
         <Route element={<MainLayout/>}> 
           <Route path="/dashboard" element={<DashBoard/>} />
+          <Route path="/ledge" element={<Ledge/>}/>
         </Route>
       </Routes>        
     </BrowserRouter>
